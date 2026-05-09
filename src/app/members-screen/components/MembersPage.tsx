@@ -94,7 +94,8 @@ export default function MembersPage() {
             {filteredMembers.map((member) => (
               <div
                 key={member.id}
-                className="p-5 rounded-xl bg-card border border-border hover:border-primary/30 transition-all duration-200"
+                onClick={() => router.push(`/profile?id=${member.id}`)}
+                className="p-5 rounded-xl bg-card border border-border hover:border-primary/30 transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-start gap-4">
                   <div className="relative">

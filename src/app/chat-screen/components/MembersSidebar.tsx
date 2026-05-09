@@ -1,40 +1,53 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/lib/supabase/auth';
 
-const MEMBERS = [
-  { id: 'member-001', name: 'Amadou Diallo', grade: 'Responsable', avatar: 'AD', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-002', name: 'Fatoumata Koné', grade: 'Adjoint', avatar: 'FK', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-003', name: 'Ibrahim Traoré', grade: 'Membre', avatar: 'IT', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-004', name: 'Mariam Coulibaly', grade: 'Membre', avatar: 'MC', status: 'away', lastSeen: 'il y a 5 min' },
-  { id: 'member-005', name: 'Ousmane Bah', grade: 'Adjoint', avatar: 'OB', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-006', name: 'Aïssatou Baldé', grade: 'Membre', avatar: 'AB', status: 'offline', lastSeen: 'il y a 2h' },
-  { id: 'member-007', name: 'Mamadou Sylla', grade: 'Membre', avatar: 'MS', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-008', name: 'Kadiatou Barry', grade: 'Membre', avatar: 'KB', status: 'away', lastSeen: 'il y a 12 min' },
-  { id: 'member-009', name: 'Sekou Camara', grade: 'Membre', avatar: 'SC', status: 'offline', lastSeen: 'hier' },
-  { id: 'member-010', name: 'Hawa Diallo', grade: 'Membre', avatar: 'HD', status: 'online', lastSeen: 'maintenant' },
-  { id: 'member-011', name: 'Boubacar Sow', grade: 'Membre', avatar: 'BS', status: 'offline', lastSeen: 'il y a 3h' },
-  { id: 'member-012', name: 'Nènè Kourouma', grade: 'Membre', avatar: 'NK', status: 'online', lastSeen: 'maintenant' },
-];
-
-const STATUS_LABELS: Record<string, string> = { online: 'En ligne', away: 'Absent', offline: 'Hors ligne' };
+const STATUS_LABELS: Record<string, string> = { online: 'En ligne', offline: 'Hors ligne' };
 
 interface Props {
   onClose: () => void;
 }
 
 export default function MembersSidebar({ onClose }: Props) {
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'online'>('all');
+  const [members, setMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = MEMBERS.filter((m) => {
+  useEffect(() => {
+    loadMembers();
+  }, []);
+
+  const loadMembers = async () => {
+    try {
+      const data = await authService.getAllUsers();
+      const formattedMembers = data.map((user: any) => ({
+        id: user.id,
+        name: `${user.prenom} ${user.nom}`,
+        grade: user.grade,
+        avatar: `${user.prenom[0]}${user.nom[0]}`.toUpperCase(),
+        status: user.status || 'offline',
+        lastSeen: user.status === 'online' ? 'maintenant' : 'hors ligne',
+      }));
+      setMembers(formattedMembers);
+    } catch (error) {
+      console.error('Error loading members:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = members.filter((m) => {
     const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === 'all' || m.status === 'online';
     return matchSearch && matchFilter;
   });
 
-  const onlineCount = MEMBERS.filter((m) => m.status === 'online').length;
+  const onlineCount = members.filter((m) => m.status === 'online').length;
 
   return (
     <div className="flex flex-col h-full">
@@ -44,7 +57,7 @@ export default function MembersSidebar({ onClose }: Props) {
           <div>
             <h2 className="text-sm font-700 text-foreground">Membres</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
-              <span className="text-green-400 font-600">{onlineCount}</span> en ligne · {MEMBERS.length} total
+              <span className="text-green-400 font-600">{onlineCount}</span> en ligne · {members.length} total
             </p>
           </div>
           <button
@@ -85,7 +98,11 @@ export default function MembersSidebar({ onClose }: Props) {
 
       {/* Member list */}
       <div className="flex-1 overflow-y-auto scrollbar-thin p-2">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="text-xs text-muted-foreground">Chargement...</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Search size={20} className="text-muted-foreground mb-2" />
             <p className="text-xs text-muted-foreground">Aucun membre trouvé</p>
@@ -95,6 +112,7 @@ export default function MembersSidebar({ onClose }: Props) {
             {filtered.map((member) => (
               <button
                 key={member.id}
+                onClick={() => router.push(`/profile?id=${member.id}`)}
                 className="w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl hover:bg-muted/60 transition-all duration-150 group text-left"
               >
                 <div className="relative flex-shrink-0">
@@ -102,7 +120,7 @@ export default function MembersSidebar({ onClose }: Props) {
                     {member.avatar}
                   </div>
                   <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ${
-                    member.status === 'online' ? 'presence-online' : member.status === 'away' ? 'presence-away' : 'presence-offline'
+                    member.status === 'online' ? 'presence-online' : 'presence-offline'
                   }`} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -110,7 +128,7 @@ export default function MembersSidebar({ onClose }: Props) {
                   <p className="text-[10px] text-muted-foreground truncate">{member.grade}</p>
                 </div>
                 <span className={`text-[10px] font-500 flex-shrink-0 ${
-                  member.status === 'online' ? 'text-green-400' : member.status === 'away' ? 'text-yellow-400' : 'text-muted-foreground'
+                  member.status === 'online' ? 'text-green-400' : 'text-muted-foreground'
                 }`}>
                   {STATUS_LABELS[member.status]}
                 </span>
