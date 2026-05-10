@@ -32,8 +32,9 @@ export default function UnifiedDashboard() {
     { id: 'home', label: 'Accueil', icon: 'house-door-fill' },
     { id: 'members', label: 'Membres', icon: 'people-fill' },
     { id: 'absence', label: 'Demander une absence', icon: 'calendar-x-fill', action: () => setShowAbsenceModal(true) },
-    { id: 'presidents', label: 'Anciens présidents', icon: 'award-fill' },
+    { id: 'presidents', label: 'Anciens présidents', icon: 'trophy-fill' },
     { id: 'logos', label: 'Galerie des logos', icon: 'images' },
+    { id: 'about', label: 'À propos de la commission', icon: 'info-circle-fill' },
     { id: 'bug', label: 'Signaler un problème', icon: 'exclamation-triangle-fill', action: () => setShowBugModal(true) },
   ];
 
@@ -124,10 +125,22 @@ export default function UnifiedDashboard() {
 
         {/* Main Content */}
         <main className="pt-20 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          {activeSection === 'home' && <HomeSection userData={userData} setActiveSection={setActiveSection} />}
+          {/* Back Button */}
+          {activeSection !== 'home' && (
+            <button
+              onClick={() => setActiveSection('home')}
+              className="mb-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+            >
+              <i className="bi bi-arrow-left-circle-fill text-orange-500 text-xl"></i>
+              <span className="font-semibold">Retour à l'accueil</span>
+            </button>
+          )}
+          
+          {activeSection === 'home' && <HomeSection userData={userData} setActiveSection={setActiveSection} setShowAbsenceModal={setShowAbsenceModal} />}
           {activeSection === 'members' && <MembersSection router={router} />}
           {activeSection === 'presidents' && <PresidentsSection />}
           {activeSection === 'logos' && <LogosSection />}
+          {activeSection === 'about' && <AboutSection />}
         </main>
 
         {/* Modals */}
@@ -139,7 +152,7 @@ export default function UnifiedDashboard() {
 }
 
 // Home Section with animated welcome
-function HomeSection({ userData, setActiveSection }: any) {
+function HomeSection({ userData, setActiveSection, setShowAbsenceModal }: any) {
   return (
     <div className="space-y-8">
       {/* Hero Section with Animated Welcome */}
@@ -192,8 +205,8 @@ function HomeSection({ userData, setActiveSection }: any) {
       {/* Fonctionnalités Phares */}
       <div>
         <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <i className="bi bi-stars text-orange-500"></i>
-          Fonctionnalités phares
+          <i className="bi bi-grid-3x3-gap-fill text-orange-500"></i>
+          3 onglets principaux
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <FeatureCard 
@@ -204,14 +217,14 @@ function HomeSection({ userData, setActiveSection }: any) {
             onClick={() => setActiveSection('members')} 
           />
           <FeatureCard 
-            icon="award-fill" 
-            title="Présidents" 
-            description="Nos présidents qui ont marqué l'histoire de la commission"
+            icon="calendar-x-fill" 
+            title="Demander une absence" 
+            description="Formulaire de demande d'absence pour les membres"
             gradient="from-purple-500 to-purple-600"
-            onClick={() => setActiveSection('presidents')} 
+            onClick={() => setShowAbsenceModal(true)} 
           />
           <FeatureCard 
-            icon="image-fill" 
+            icon="images" 
             title="Logos" 
             description="Logos phares de la com - Téléchargement direct"
             gradient="from-orange-500 to-orange-600"
@@ -587,6 +600,59 @@ function BugModal({ onClose }: any) {
             {loading ? 'Envoi...' : 'Envoyer le rapport'}
           </button>
         </form>
+      </div>
+    </div>
+  );
+}
+
+// About Section
+function AboutSection() {
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-8 md:p-12 mb-8 shadow-2xl">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <i className="bi bi-info-circle-fill text-white text-3xl"></i>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-white">À propos de la commission</h2>
+        </div>
+        <p className="text-white/90 text-lg leading-relaxed">
+          Informations à venir...
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
+            <i className="bi bi-bullseye text-blue-500 text-2xl"></i>
+          </div>
+          <h3 className="font-bold text-xl mb-2">Notre mission</h3>
+          <p className="text-gray-600 dark:text-gray-400">À compléter...</p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
+          <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
+            <i className="bi bi-eye-fill text-purple-500 text-2xl"></i>
+          </div>
+          <h3 className="font-bold text-xl mb-2">Notre vision</h3>
+          <p className="text-gray-600 dark:text-gray-400">À compléter...</p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
+          <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4">
+            <i className="bi bi-heart-fill text-orange-500 text-2xl"></i>
+          </div>
+          <h3 className="font-bold text-xl mb-2">Nos valeurs</h3>
+          <p className="text-gray-600 dark:text-gray-400">À compléter...</p>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
+          <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center mb-4">
+            <i className="bi bi-people-fill text-green-500 text-2xl"></i>
+          </div>
+          <h3 className="font-bold text-xl mb-2">Notre équipe</h3>
+          <p className="text-gray-600 dark:text-gray-400">À compléter...</p>
+        </div>
       </div>
     </div>
   );
