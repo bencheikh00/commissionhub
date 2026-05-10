@@ -10,7 +10,6 @@ export default function UnifiedDashboard() {
   const [userData, setUserData] = useState<any>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [showAbsenceModal, setShowAbsenceModal] = useState(false);
-  const [showIdeaModal, setShowIdeaModal] = useState(false);
   const [showBugModal, setShowBugModal] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -30,13 +29,12 @@ export default function UnifiedDashboard() {
   };
 
   const menuItems = [
-    { id: 'home', label: 'Accueil', icon: 'house-fill' },
+    { id: 'home', label: 'Accueil', icon: 'house-door-fill' },
     { id: 'members', label: 'Membres', icon: 'people-fill' },
-    { id: 'absence', label: 'Demander une absence', icon: 'calendar-check-fill', action: () => setShowAbsenceModal(true) },
+    { id: 'absence', label: 'Demander une absence', icon: 'calendar-x-fill', action: () => setShowAbsenceModal(true) },
     { id: 'presidents', label: 'Anciens présidents', icon: 'award-fill' },
-    { id: 'ideas', label: 'Boîte à idées', icon: 'lightbulb-fill', action: () => setShowIdeaModal(true) },
-    { id: 'logos', label: 'Galerie des logos', icon: 'image-fill' },
-    { id: 'bug', label: 'Signaler un problème', icon: 'bug-fill', action: () => setShowBugModal(true) },
+    { id: 'logos', label: 'Galerie des logos', icon: 'images' },
+    { id: 'bug', label: 'Signaler un problème', icon: 'exclamation-triangle-fill', action: () => setShowBugModal(true) },
   ];
 
   return (
@@ -134,7 +132,6 @@ export default function UnifiedDashboard() {
 
         {/* Modals */}
         {showAbsenceModal && <AbsenceModal onClose={() => setShowAbsenceModal(false)} />}
-        {showIdeaModal && <IdeaModal onClose={() => setShowIdeaModal(false)} />}
         {showBugModal && <BugModal onClose={() => setShowBugModal(false)} />}
       </div>
     </div>
@@ -145,39 +142,108 @@ export default function UnifiedDashboard() {
 function HomeSection({ userData, setActiveSection }: any) {
   return (
     <div className="space-y-8">
-      {/* Animated Welcome */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-8 md:p-12 shadow-xl">
+      {/* Hero Section with Animated Welcome */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-3xl p-8 md:p-16 shadow-2xl">
         <div className="relative z-10">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 animate-bounce">
-            Bienvenue chez Bourama <i className="bi bi-hand-wave-fill"></i>
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">
+            <span className="inline-block animate-fade-in">Bienvenue</span>{' '}
+            <span className="inline-block animate-fade-in" style={{ animationDelay: '0.2s' }}>chez</span>{' '}
+            <span className="inline-block animate-bounce" style={{ animationDelay: '0.4s' }}>Bourama</span>{' '}
+            <i className="bi bi-hand-wave-fill inline-block animate-wiggle"></i>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90">{userData?.name}</p>
-          <p className="text-white/75 mt-1">{userData?.grade} · Commission Communication</p>
+          <h2 className="text-xl md:text-2xl text-white/95 font-semibold mb-6 animate-slide-up" style={{ animationDelay: '0.6s' }}>
+            Le portail privé de la commission communication de l'IAM
+          </h2>
+          <div className="flex items-center gap-3 animate-slide-up" style={{ animationDelay: '0.8s' }}>
+            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <i className="bi bi-person-circle text-white text-2xl"></i>
+            </div>
+            <div>
+              <p className="text-white font-bold text-lg">{userData?.name}</p>
+              <p className="text-white/80 text-sm">{userData?.grade}</p>
+            </div>
+          </div>
         </div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-2xl"></div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <ActionCard icon="people-fill" label="Membres" onClick={() => setActiveSection('members')} />
-        <ActionCard icon="award-fill" label="Présidents" onClick={() => setActiveSection('presidents')} />
-        <ActionCard icon="lightbulb-fill" label="Idées" onClick={() => {}} />
-        <ActionCard icon="image-fill" label="Logos" onClick={() => setActiveSection('logos')} />
+      {/* Security Notice */}
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-lg">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+            <i className="bi bi-shield-lock-fill text-orange-500 text-2xl"></i>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
+              <i className="bi bi-info-circle-fill text-orange-500"></i>
+              Accès réservé
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+              L'accès à cette plateforme est strictement réservé aux membres actifs de la Commission Communication. 
+              Cet environnement privé et sécurisé a pour but de protéger nos données internes tout en offrant des outils 
+              performants pour collaborer, innover et piloter nos campagnes de communication en toute confidentialité.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Fonctionnalités Phares */}
+      <div>
+        <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <i className="bi bi-stars text-orange-500"></i>
+          Fonctionnalités phares
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard 
+            icon="people-fill" 
+            title="Membres" 
+            description="Annuaire complet des membres actifs de la commission"
+            gradient="from-blue-500 to-blue-600"
+            onClick={() => setActiveSection('members')} 
+          />
+          <FeatureCard 
+            icon="award-fill" 
+            title="Présidents" 
+            description="Nos présidents qui ont marqué l'histoire de la commission"
+            gradient="from-purple-500 to-purple-600"
+            onClick={() => setActiveSection('presidents')} 
+          />
+          <FeatureCard 
+            icon="image-fill" 
+            title="Logos" 
+            description="Logos phares de la com - Téléchargement direct"
+            gradient="from-orange-500 to-orange-600"
+            onClick={() => setActiveSection('logos')} 
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-function ActionCard({ icon, label, onClick }: any) {
+function FeatureCard({ icon, title, description, gradient, onClick }: any) {
   return (
     <button
       onClick={onClick}
-      className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 hover:border-orange-500 transition-all text-left"
+      className="group relative bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 text-left overflow-hidden"
     >
-      <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center mb-3">
-        <i className={`bi ${icon} text-orange-500 text-2xl`}></i>
+      {/* Gradient overlay on hover */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+      
+      <div className="relative z-10">
+        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+          <i className={`bi ${icon} text-white text-3xl`}></i>
+        </div>
+        <h3 className="font-bold text-xl mb-2 group-hover:text-orange-500 transition-colors">{title}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
       </div>
-      <h3 className="font-bold">{label}</h3>
+      
+      {/* Arrow icon */}
+      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <i className="bi bi-arrow-right-circle-fill text-orange-500 text-2xl"></i>
+      </div>
     </button>
   );
 }
