@@ -41,7 +41,11 @@ export default function LoginForm() {
       const user = await authService.login(data.email, data.password);
       
       sessionStorage.setItem('ch_user', JSON.stringify(user));
+<<<<<<< HEAD
       router.push('/lock-screen-new');
+=======
+      router.push('/lock-screen');
+>>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
     } catch (error: any) {
       setAuthError(error.message || 'Erreur de connexion');
     } finally {

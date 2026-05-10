@@ -44,6 +44,55 @@
   }
 }
 
+<<<<<<< HEAD
+=======
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30% {
+    transform: rotate(14deg);
+  }
+  20%, 40% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+>>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
 .animate-wiggle {
   animation: wiggle 1s ease-in-out infinite;
 }
@@ -59,3 +108,20 @@
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
+<<<<<<< HEAD
+=======
+
+.animate-wave {
+  animation: wave 2s ease-in-out infinite;
+  display: inline-block;
+  transform-origin: 70% 70%;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+>>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)

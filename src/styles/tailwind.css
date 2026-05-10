@@ -22,6 +22,27 @@
   --font-sans: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
 }
 
+<<<<<<< HEAD
+=======
+[data-theme="light"] {
+  --background: #FFFFFF;
+  --foreground: #0A0A0A;
+  --primary: #F97316;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F5F5;
+  --secondary-foreground: #525252;
+  --accent: #FB923C;
+  --accent-foreground: #FFFFFF;
+  --muted: #E5E5E5;
+  --muted-foreground: #737373;
+  --card: #FAFAFA;
+  --card-foreground: #0A0A0A;
+  --border: #E5E5E5;
+  --input: #F5F5F5;
+  --ring: #F97316;
+}
+
+>>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
 @layer base {
   * {
     box-sizing: border-box;
@@ -92,6 +113,42 @@
     box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
   }
 
+<<<<<<< HEAD
+=======
+  /* Styles Néon Modernes */
+  .shadow-neon-orange {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 
+                0 0 40px rgba(249, 115, 22, 0.2),
+                0 0 60px rgba(249, 115, 22, 0.1);
+  }
+
+  .shadow-neon-orange-sm {
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.3), 
+                0 0 20px rgba(249, 115, 22, 0.15);
+  }
+
+  .shadow-neon-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 
+                0 0 40px rgba(59, 130, 246, 0.2),
+                0 0 60px rgba(59, 130, 246, 0.1);
+  }
+
+  .shadow-neon-purple {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 
+                0 0 40px rgba(168, 85, 247, 0.2),
+                0 0 60px rgba(168, 85, 247, 0.1);
+  }
+
+  .neon-card {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .neon-card:hover {
+    transform: translateY(-2px);
+  }
+
+>>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
   .bg-grid-pattern {
     background-image: radial-gradient(circle, #262626 1px, transparent 1px);
     background-size: 24px 24px;
