@@ -22,8 +22,6 @@
   --font-sans: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
 }
 
-<<<<<<< HEAD
-=======
 [data-theme="light"] {
   --background: #FFFFFF;
   --foreground: #0A0A0A;
@@ -42,7 +40,6 @@
   --ring: #F97316;
 }
 
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
 @layer base {
   * {
     box-sizing: border-box;
@@ -113,8 +110,6 @@
     box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
   }
 
-<<<<<<< HEAD
-=======
   /* Styles Néon Modernes */
   .shadow-neon-orange {
     box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 
@@ -148,7 +143,6 @@
     transform: translateY(-2px);
   }
 
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
   .bg-grid-pattern {
     background-image: radial-gradient(circle, #262626 1px, transparent 1px);
     background-size: 24px 24px;

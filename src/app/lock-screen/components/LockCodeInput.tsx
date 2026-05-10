@@ -59,11 +59,7 @@ export default function LockCodeInput({ value, onChange, length, hasError, isSuc
   }, [onChange, length]);
 
   return (
-<<<<<<< HEAD
-    <div className="flex gap-2 justify-center" role="group" aria-label="Code secret">
-=======
     <div className="flex gap-1.5 sm:gap-2 justify-center" role="group" aria-label="Code secret">
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
       {Array.from({ length }).map((_, i) => {
         const isFilled = i < value.length;
         const isFocused = i === value.length;
@@ -81,27 +77,16 @@ export default function LockCodeInput({ value, onChange, length, hasError, isSuc
             onKeyDown={(e) => handleKeyDown(e, i)}
             onPaste={handlePaste}
             aria-label={`Caractère ${i + 1}`}
-<<<<<<< HEAD
-            className={`w-11 h-14 text-center text-lg font-800 rounded-xl border-2 bg-input outline-none transition-all duration-200 tracking-widest uppercase cursor-text ${
-=======
             className={`w-8 h-10 sm:w-10 sm:h-12 text-center text-sm sm:text-base font-800 rounded-lg sm:rounded-xl border-2 outline-none transition-all duration-200 tracking-widest uppercase cursor-text ${
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
               isSuccess
                 ? 'border-green-500/60 bg-green-500/10 text-green-400'
                 : hasError
                 ? 'border-red-500/60 bg-red-500/8 text-red-400'
                 : isFilled
-<<<<<<< HEAD
-                ? 'border-primary bg-primary/10 text-primary'
-                : isFocused
-                ? 'border-primary/60 ring-2 ring-primary/20 text-foreground'
-                : 'border-border text-foreground'
-=======
                 ? 'bg-white border-primary text-primary shadow-[0_0_10px_rgba(249,115,22,0.3)]'
                 : isFocused
                 ? 'bg-white border-primary/60 ring-2 ring-primary/20 text-primary'
                 : 'bg-white border-border text-foreground'
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
             }`}
           />
         );

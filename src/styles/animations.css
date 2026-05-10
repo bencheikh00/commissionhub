@@ -44,8 +44,6 @@
   }
 }
 
-<<<<<<< HEAD
-=======
 @keyframes wave {
   0%, 100% {
     transform: rotate(0deg);
@@ -92,7 +90,6 @@
   }
 }
 
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
 .animate-wiggle {
   animation: wiggle 1s ease-in-out infinite;
 }
@@ -108,8 +105,6 @@
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
-<<<<<<< HEAD
-=======
 
 .animate-wave {
   animation: wave 2s ease-in-out infinite;
@@ -124,4 +119,3 @@
 .animate-float {
   animation: float linear infinite;
 }
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)

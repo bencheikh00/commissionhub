@@ -82,14 +82,6 @@ export default function AbsenceModal({ onClose }: Props) {
         <div className="px-6 py-5">
           {success ? (
             <div className="flex flex-col items-center justify-center py-8 animate-fade-in">
-<<<<<<< HEAD
-              <div className="w-14 h-14 rounded-full bg-green-500/10 flex items-center justify-center mb-3">
-                <CheckCircle2 size={28} className="text-green-400" />
-              </div>
-              <h3 className="text-base font-700 text-foreground mb-1">Demande envoyée</h3>
-              <p className="text-sm text-muted-foreground text-center">
-                Votre demande a été soumise et sera traitée par le responsable.
-=======
               <div className="w-14 h-14 rounded-full bg-green-500/10 flex items-center justify-center mb-3 animate-bounce">
                 <CheckCircle2 size={28} className="text-green-400" />
               </div>
@@ -99,7 +91,6 @@ export default function AbsenceModal({ onClose }: Props) {
               </p>
               <p className="text-xs text-green-400 text-center mt-2">
                 📧 Vous recevrez un email de confirmation
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
               </p>
             </div>
           ) : (

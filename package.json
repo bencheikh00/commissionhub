@@ -60,11 +60,7 @@
     "react": "19.0.3",
     "react-dom": "19.0.3",
     "react-hook-form": "^7.75.0",
-<<<<<<< HEAD
-    "recharts": "^2.15.2",
-=======
     "recharts": "^2.15.4",
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
     "sonner": "^1.7.4"
   },
   "devDependencies": {

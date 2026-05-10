@@ -29,18 +29,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={plusJakartaSans.variable}>
-<<<<<<< HEAD
-      <body className={plusJakartaSans.className}>
-        {children}
-</body>
-=======
       <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
       </head>
       <body className={plusJakartaSans.className}>
         {children}
       </body>
->>>>>>> d68099a (feat: CommissionHub v1.0 - Plateforme complète avec back-office admin)
     </html>
   );
 }
