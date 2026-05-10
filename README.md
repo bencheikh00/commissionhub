@@ -30,7 +30,11 @@ A modern Next.js 15 application built with TypeScript and Tailwind CSS.
 
 Une plateforme collaborative moderne pour la Commission Communication avec **intégration Supabase complète**.
 
-## 🚀 Fonctionnalités
+## 🚀 Démo en Ligne
+
+👉 **[Voir la démo](https://commissionhub-bencheikh00.vercel.app)** (Lien à mettre à jour après déploiement)
+
+## ✨ Fonctionnalités principales
 
 - **Next.js 15** - Framework React avec performance optimale
 - **React 19** - Dernière version avec fonctionnalités avancées
