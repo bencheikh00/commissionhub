@@ -10,6 +10,7 @@ export default function LockScreen() {
   const router = useRouter();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [userData, setUserData] = useState<any>(null);
   const [attempts, setAttempts] = useState(0);
 
@@ -26,7 +27,11 @@ export default function LockScreen() {
     e.preventDefault();
     
     if (pin.toUpperCase() === CORRECT_PIN) {
-      router.push('/dashboard-new');
+      setSuccess(true);
+      setError('');
+      setTimeout(() => {
+        router.push('/dashboard-new');
+      }, 2000);
     } else {
       setAttempts(attempts + 1);
       setError('Code PIN incorrect');
@@ -97,31 +102,40 @@ export default function LockScreen() {
                 Entrez le code PIN de sécurité
               </label>
               <input
-                type="password"
+                type="text"
                 value={pin}
                 onChange={(e) => {
                   setPin(e.target.value.toUpperCase());
                   setError('');
+                  setSuccess(false);
                 }}
                 placeholder="CODE PIN"
                 maxLength={10}
-                className="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-center text-2xl font-bold tracking-widest uppercase focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all"
+                disabled={success}
+                className="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-center text-2xl font-bold tracking-widest uppercase focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all text-orange-600 dark:text-orange-400 placeholder:text-gray-400 disabled:opacity-50"
                 autoFocus
               />
               {error && (
-                <p className="mt-2 text-red-500 text-sm text-center flex items-center justify-center gap-2">
+                <p className="mt-2 text-red-500 text-sm text-center flex items-center justify-center gap-2 animate-shake">
                   <i className="bi bi-x-circle-fill"></i>
                   {error}
+                </p>
+              )}
+              {success && (
+                <p className="mt-2 text-green-500 text-sm text-center flex items-center justify-center gap-2 animate-bounce">
+                  <i className="bi bi-check-circle-fill"></i>
+                  Votre code est valide ! Redirection...
                 </p>
               )}
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg"
+              disabled={success}
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <i className="bi bi-unlock-fill"></i>
-              Déverrouiller
+              {success ? 'Accès autorisé...' : 'Déverrouiller'}
             </button>
           </form>
 
