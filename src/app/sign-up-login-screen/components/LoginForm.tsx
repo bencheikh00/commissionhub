@@ -41,7 +41,7 @@ export default function LoginForm() {
       const user = await authService.login(data.email, data.password);
       
       sessionStorage.setItem('ch_user', JSON.stringify(user));
-      router.push('/dashboard');
+      router.push('/dashboard-new');
     } catch (error: any) {
       setAuthError(error.message || 'Erreur de connexion');
     } finally {
