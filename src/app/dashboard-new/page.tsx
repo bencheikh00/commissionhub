@@ -331,7 +331,7 @@ function MembersSection({ router }: any) {
   );
 }
 
-// Presidents Section
+// Presidents Section with Timeline Tree
 function PresidentsSection() {
   const [presidents, setPresidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -341,10 +341,57 @@ function PresidentsSection() {
   }, []);
 
   const loadPresidents = async () => {
-    const supabase = createClient();
-    const { data } = await supabase.from('presidents').select('*').order('year', { ascending: false });
-    setPresidents(data || []);
-    setLoading(false);
+    try {
+      const supabase = createClient();
+      
+      // Get presidents from presidents table
+      const { data: presidentsData } = await supabase
+        .from('presidents')
+        .select('*')
+        .order('year', { ascending: false });
+      
+      // Get users who were presidents
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('*')
+        .eq('was_president', true)
+        .order('president_year', { ascending: false });
+      
+      // Combine both sources
+      const allPresidents = [
+        ...(usersData || []).map((user: any) => ({
+          id: user.id,
+          name: `${user.prenom} ${user.nom}`,
+          year: user.president_year,
+          avatar: `${user.prenom[0]}${user.nom[0]}`.toUpperCase(),
+          achievements: 'Membre actuel - Ancien président',
+          color: 'from-green-500 to-emerald-600',
+          photo_url: user.photo_url,
+          isCurrentMember: true,
+        })),
+        ...(presidentsData || []).map((pres: any) => ({
+          ...pres,
+          isCurrentMember: false,
+        })),
+      ];
+      
+      // Remove duplicates and sort by year
+      const uniquePresidents = allPresidents
+        .filter((pres, index, self) => 
+          index === self.findIndex((p) => p.year === pres.year)
+        )
+        .sort((a, b) => {
+          const yearA = parseInt(a.year?.split('-')[0] || '0');
+          const yearB = parseInt(b.year?.split('-')[0] || '0');
+          return yearB - yearA;
+        });
+      
+      setPresidents(uniquePresidents);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -367,30 +414,137 @@ function PresidentsSection() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <i className="bi bi-award-fill text-orange-500"></i>
-        Anciens présidents
-      </h2>
-      <div className="space-y-4">
-        {presidents.map((pres, idx) => (
-          <div key={pres.id} className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
-            <div className="flex items-center gap-4">
-              <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${pres.color} flex items-center justify-center text-white font-bold text-xl`}>
-                {pres.avatar}
+      {/* Header */}
+      <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-8 md:p-12 mb-8 shadow-2xl">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <i className="bi bi-trophy-fill text-white text-3xl"></i>
+          </div>
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">Anciens présidents</h2>
+            <p className="text-white/80 mt-1">L'histoire de notre commission</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-white/90">
+          <i className="bi bi-people-fill"></i>
+          <span className="font-semibold">{presidents.length} présidents</span>
+        </div>
+      </div>
+
+      {/* Timeline Tree */}
+      <div className="relative">
+        {/* Vertical Line */}
+        <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 via-orange-500 to-purple-500 hidden md:block"></div>
+        
+        <div className="space-y-8">
+          {presidents.map((president, index) => (
+            <div key={president.id} className="relative">
+              {/* Timeline Node */}
+              <div className="absolute left-8 md:left-12 top-8 w-6 h-6 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 border-4 border-white dark:border-black shadow-lg hidden md:block -translate-x-1/2 z-10 animate-pulse"></div>
+              
+              {/* President Card */}
+              <div className="md:ml-24 group">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-800 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${president.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+                  
+                  <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+                    {/* Avatar */}
+                    <div className="relative flex-shrink-0">
+                      {president.photo_url ? (
+                        <img 
+                          src={president.photo_url} 
+                          alt={president.name}
+                          className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-orange-500 shadow-lg"
+                        />
+                      ) : (
+                        <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br ${president.color} flex items-center justify-center text-white font-bold text-2xl md:text-3xl shadow-lg border-4 border-orange-500`}>
+                          {president.avatar}
+                        </div>
+                      )}
+                      {/* Crown for first president */}
+                      {index === 0 && (
+                        <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg animate-bounce">
+                          <i className="bi bi-crown-fill text-white text-lg"></i>
+                        </div>
+                      )}
+                      {/* Badge for current members */}
+                      {president.isCurrentMember && (
+                        <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg border-2 border-white dark:border-black">
+                          <i className="bi bi-check-circle-fill text-white text-lg"></i>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Info */}
+                    <div className="flex-1">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                        <div>
+                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
+                            {president.name}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <i className="bi bi-calendar-event-fill text-orange-500"></i>
+                            <span className="text-orange-500 font-bold">{president.year}</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          {index === 0 && (
+                            <span className="px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-600 dark:text-yellow-400 text-xs font-bold flex items-center gap-1">
+                              <i className="bi bi-star-fill"></i>
+                              Récent
+                            </span>
+                          )}
+                          {president.isCurrentMember && (
+                            <span className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 text-xs font-bold flex items-center gap-1">
+                              <i className="bi bi-person-check-fill"></i>
+                              Membre actif
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Achievements */}
+                      <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                        <i className="bi bi-award-fill text-orange-500 mt-1 flex-shrink-0"></i>
+                        <p className="text-sm md:text-base leading-relaxed">{president.achievements}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Decorative corner */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-full"></div>
+                </div>
               </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-lg">{pres.name}</h3>
-                <p className="text-sm text-orange-500">{pres.year}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{pres.achievements}</p>
-              </div>
-              {idx === 0 && (
-                <span className="px-3 py-1 rounded-full bg-orange-500/10 text-orange-500 text-xs font-bold">
-                  Récent
-                </span>
+              
+              {/* Connection Line to Next */}
+              {index < presidents.length - 1 && (
+                <div className="hidden md:block absolute left-12 top-full w-0.5 h-8 bg-gradient-to-b from-orange-500 to-purple-500 -translate-x-1/2"></div>
               )}
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Footer */}
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white text-center">
+          <i className="bi bi-trophy-fill text-4xl mb-2 opacity-80"></i>
+          <div className="text-3xl font-bold">{presidents.length}</div>
+          <div className="text-sm opacity-80">Présidents</div>
+        </div>
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white text-center">
+          <i className="bi bi-calendar-range-fill text-4xl mb-2 opacity-80"></i>
+          <div className="text-3xl font-bold">
+            {presidents.length > 0 ? new Date().getFullYear() - parseInt(presidents[presidents.length - 1]?.year?.split('-')[0] || '2020') : 0}+
           </div>
-        ))}
+          <div className="text-sm opacity-80">Années d'histoire</div>
+        </div>
+        <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white text-center">
+          <i className="bi bi-people-fill text-4xl mb-2 opacity-80"></i>
+          <div className="text-3xl font-bold">{presidents.filter(p => p.isCurrentMember).length}</div>
+          <div className="text-sm opacity-80">Membres actifs</div>
+        </div>
       </div>
     </div>
   );
